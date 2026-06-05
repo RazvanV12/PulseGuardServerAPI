@@ -35,6 +35,5 @@ public class Consent {
     @Column(nullable = false, updatable = false)
     private LocalDateTime grantedAt;
 
-    // Null means consent has not been revoked yet.
     private LocalDateTime revokedAt;
 }

@@ -100,10 +100,6 @@ public class MeasurementService {
                 .build();
     }
 
-    // ── Alert thresholds ──────────────────────────────────────────────────────
-    // LOW_SPO2  → SpO2 < 92 %       (clinical hypoxemia threshold)
-    // HIGH_HR   → Heart rate > 120  (tachycardia boundary)
-    // LOW_HR    → Heart rate < 50   (bradycardia boundary)
     private List<Alert> generateAlerts(User user, Measurement measurement) {
         List<Alert> alerts = new ArrayList<>();
 

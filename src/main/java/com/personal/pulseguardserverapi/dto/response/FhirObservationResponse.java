@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Simplified HL7 FHIR R4 Observation resource.
- * Uses LOINC codes: 8867-4 (Heart Rate), 2708-6 (SpO2).
- * Uses UCUM units: /min (heart rate), % (SpO2).
- */
 @Data
 @Builder
 @NoArgsConstructor

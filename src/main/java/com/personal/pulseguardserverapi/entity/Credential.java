@@ -18,7 +18,6 @@ public class Credential {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long credentialId;
 
-    // Owning side of the OneToOne — holds the user_id FK column.
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;

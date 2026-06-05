@@ -11,6 +11,5 @@ public class CreateDeviceRequest {
 
     private String firmwareVersion;
 
-    // Accepted values: ACTIVE, INACTIVE, PAIRED. Defaults to ACTIVE if blank.
     private String status = "ACTIVE";
 }

@@ -18,7 +18,6 @@ public class AlertResponse {
     private String severity;
     private boolean acknowledged;
     private LocalDateTime createdAt;
-    // Measurement snapshot (null if no linked measurement)
     private Long measurementId;
     private Integer heartRate;
     private Double spo2;

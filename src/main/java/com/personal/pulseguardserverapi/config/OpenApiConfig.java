@@ -18,7 +18,6 @@ public class OpenApiConfig {
                 .title("PulseGuard API")
                 .description("Vital Signs Monitoring Backend API — Arduino + Flutter")
                 .version("1.0.0"))
-            // Add a "Authorize" button in Swagger UI for JWT.
             .addSecurityItem(new SecurityRequirement().addList("Bearer Authentication"))
             .components(new Components()
                 .addSecuritySchemes("Bearer Authentication",

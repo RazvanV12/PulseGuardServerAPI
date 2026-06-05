@@ -61,7 +61,6 @@ public class SessionService {
 
         session.setEndedAt(LocalDateTime.now());
 
-        // Calculate averages from all measurements in this session.
         List<Measurement> measurements = measurementRepository.findBySession(session);
         if (!measurements.isEmpty()) {
             double avgHr = measurements.stream()

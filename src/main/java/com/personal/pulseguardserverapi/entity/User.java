@@ -22,7 +22,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @JdbcTypeCode(SqlTypes.VARCHAR)          // store as "xxxxxxxx-xxxx-..." not binary
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(length = 36, updatable = false, nullable = false)
     private UUID userId;
 
@@ -45,7 +45,6 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // Eager-loaded so the security filter can access it without an open session.
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Credential credential;
 

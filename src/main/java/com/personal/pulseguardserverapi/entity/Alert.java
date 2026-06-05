@@ -28,7 +28,6 @@ public class Alert {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // A measurement may be null if the alert was created by another source.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "measurement_id")
     private Measurement measurement;

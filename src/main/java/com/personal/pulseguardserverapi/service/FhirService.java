@@ -38,7 +38,6 @@ public class FhirService {
         return result;
     }
 
-    // LOINC 8867-4 = Heart Rate, UCUM unit /min
     private FhirObservationResponse buildHeartRateObservation(Measurement m) {
         return FhirObservationResponse.builder()
                 .resourceType("Observation")
@@ -66,7 +65,6 @@ public class FhirService {
                 .build();
     }
 
-    // LOINC 2708-6 = Oxygen saturation, UCUM unit %
     private FhirObservationResponse buildSpo2Observation(Measurement m) {
         return FhirObservationResponse.builder()
                 .resourceType("Observation")

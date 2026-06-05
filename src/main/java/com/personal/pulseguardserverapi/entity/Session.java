@@ -8,7 +8,6 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-// Table is "monitoring_sessions" because "session" is a reserved word in MySQL.
 @Entity
 @Table(name = "monitoring_sessions")
 @Getter

@@ -28,18 +28,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF — not needed for stateless REST APIs.
             .csrf(AbstractHttpConfigurer::disable)
 
-            // Allow cross-origin requests from the Flutter app and local dev tools.
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-            // No HTTP sessions — every request must carry a JWT.
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints: auth, health check, and Swagger UI.
                 .requestMatchers(
                     "/v1/auth/**",
                     "/v1/health",
@@ -48,11 +44,9 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/v3/api-docs"
                 ).permitAll()
-                // Everything else requires a valid JWT.
                 .anyRequest().authenticated()
             )
 
-            // Insert our JWT filter before the default username/password filter.
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

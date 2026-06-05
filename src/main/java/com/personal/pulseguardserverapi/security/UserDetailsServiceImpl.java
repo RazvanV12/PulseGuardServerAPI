@@ -18,11 +18,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    /**
-     * Called by JwtAuthenticationFilter. Username here is the userId (UUID string)
-     * stored as the JWT subject. The password field is left empty because we rely on
-     * JWT for authentication, not Spring Security's form-based password check.
-     */
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
@@ -31,8 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUserId().toString(),
-                "",                        // no password needed in JWT filter
-                Collections.emptyList()    // no roles needed for this project
+                "",
+                Collections.emptyList()
         );
     }
 }

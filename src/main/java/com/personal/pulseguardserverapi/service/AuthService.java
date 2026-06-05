@@ -50,7 +50,6 @@ public class AuthService {
                 .build();
         credentialRepository.save(credential);
 
-        // Record GDPR consent.
         Consent consent = Consent.builder()
                 .user(user)
                 .consentGiven(request.isConsentGiven())
