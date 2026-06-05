@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: pulseguard-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pulseguard
+      MYSQL_USER: pulseguard_user
+      MYSQL_PASSWORD: pulseguard_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - pulseguard_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "pulseguard_user", "-ppulseguard_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pulseguard_mysql_data:
