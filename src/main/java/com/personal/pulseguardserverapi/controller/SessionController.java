@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,6 +24,13 @@ import java.util.UUID;
 public class SessionController {
 
     private final SessionService sessionService;
+
+    @GetMapping
+    @Operation(summary = "List all sessions for the current user (newest first)")
+    public ResponseEntity<List<SessionResponse>> getSessions(Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return ResponseEntity.ok(sessionService.getUserSessions(userId));
+    }
 
     @PostMapping
     @Operation(summary = "Start a new monitoring session")

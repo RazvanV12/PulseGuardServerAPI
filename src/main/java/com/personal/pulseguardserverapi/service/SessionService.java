@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +77,16 @@ public class SessionService {
         }
 
         return mapToResponse(sessionRepository.save(session));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SessionResponse> getUserSessions(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return sessionRepository.findByUserOrderByStartedAtDesc(user)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     private SessionResponse mapToResponse(Session session) {

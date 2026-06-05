@@ -2,6 +2,7 @@ package com.personal.pulseguardserverapi.service;
 
 import com.personal.pulseguardserverapi.dto.request.BatchMeasurementRequest;
 import com.personal.pulseguardserverapi.dto.response.BatchMeasurementResponse;
+import com.personal.pulseguardserverapi.dto.response.MeasurementResponse;
 import com.personal.pulseguardserverapi.entity.*;
 import com.personal.pulseguardserverapi.exception.ResourceNotFoundException;
 import com.personal.pulseguardserverapi.exception.UnauthorizedException;
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,24 @@ public class MeasurementService {
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final SessionRepository sessionRepository;
+
+    @Transactional(readOnly = true)
+    public Optional<MeasurementResponse> getLatestMeasurement(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return measurementRepository.findFirstByUserOrderByMeasuredAtDesc(user)
+                .map(this::mapToResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MeasurementResponse> getUserMeasurements(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return measurementRepository.findByUserOrderByMeasuredAtDesc(user)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public BatchMeasurementResponse saveBatch(UUID userId, BatchMeasurementRequest request) {
@@ -68,6 +89,17 @@ public class MeasurementService {
                 .build();
     }
 
+    private MeasurementResponse mapToResponse(Measurement m) {
+        return MeasurementResponse.builder()
+                .measurementId(m.getMeasurementId())
+                .deviceId(m.getDevice().getDeviceId())
+                .sessionId(m.getSession() != null ? m.getSession().getSessionId() : null)
+                .heartRate(m.getHeartRate())
+                .spo2(m.getSpo2())
+                .measuredAt(m.getMeasuredAt())
+                .build();
+    }
+
     // ── Alert thresholds ──────────────────────────────────────────────────────
     // LOW_SPO2  → SpO2 < 92 %       (clinical hypoxemia threshold)
     // HIGH_HR   → Heart rate > 120  (tachycardia boundary)
@@ -77,30 +109,21 @@ public class MeasurementService {
 
         if (measurement.getSpo2() < 92) {
             alerts.add(Alert.builder()
-                    .user(user)
-                    .measurement(measurement)
-                    .type(AlertType.LOW_SPO2)
-                    .severity(AlertSeverity.HIGH)
-                    .acknowledged(false)
-                    .build());
+                    .user(user).measurement(measurement)
+                    .type(AlertType.LOW_SPO2).severity(AlertSeverity.HIGH)
+                    .acknowledged(false).build());
         }
         if (measurement.getHeartRate() > 120) {
             alerts.add(Alert.builder()
-                    .user(user)
-                    .measurement(measurement)
-                    .type(AlertType.HIGH_HR)
-                    .severity(AlertSeverity.MEDIUM)
-                    .acknowledged(false)
-                    .build());
+                    .user(user).measurement(measurement)
+                    .type(AlertType.HIGH_HR).severity(AlertSeverity.MEDIUM)
+                    .acknowledged(false).build());
         }
         if (measurement.getHeartRate() < 50) {
             alerts.add(Alert.builder()
-                    .user(user)
-                    .measurement(measurement)
-                    .type(AlertType.LOW_HR)
-                    .severity(AlertSeverity.MEDIUM)
-                    .acknowledged(false)
-                    .build());
+                    .user(user).measurement(measurement)
+                    .type(AlertType.LOW_HR).severity(AlertSeverity.MEDIUM)
+                    .acknowledged(false).build());
         }
 
         return alerts;

@@ -1,5 +1,6 @@
 package com.personal.pulseguardserverapi.service;
 
+import com.personal.pulseguardserverapi.dto.request.UpdateUserRequest;
 import com.personal.pulseguardserverapi.dto.response.UserResponse;
 import com.personal.pulseguardserverapi.entity.User;
 import com.personal.pulseguardserverapi.exception.ResourceNotFoundException;
@@ -21,6 +22,18 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return mapToResponse(user);
+    }
+
+    @Transactional
+    public UserResponse updateProfile(UUID userId, UpdateUserRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (request.getName() != null) user.setName(request.getName());
+        if (request.getSex() != null) user.setSex(request.getSex());
+        if (request.getAge() != null) user.setAge(request.getAge());
+
+        return mapToResponse(userRepository.save(user));
     }
 
     private UserResponse mapToResponse(User user) {
